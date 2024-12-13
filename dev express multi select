@@ -1,0 +1,81 @@
+@page "/multi-select-dropdown"
+@using DevExpress.Blazor
+
+<h3>Select Employees</h3>
+
+<style>
+    .templateListbox {
+        border-width: 0;
+        width: 100%
+    }
+</style>
+<label for="ddbMultipleSelectionListBox" class="demo-text cw-480 mb-1">Employees</label>
+<DxDropDownBox @bind-Value="Value"
+               QueryDisplayText="QueryText"
+               DropDownWidthMode="DropDownWidthMode.EditorWidth"
+               InputId="ddbMultipleSelectionListBox"
+               CssClass="cw-480">
+    <DropDownBodyTemplate>
+        <DxListBox Data="@ListBoxData" TData="Employee" TValue="Employee"
+                   Values="@(GetListBoxValues(context.DropDownBox))"
+                   ValuesChanged="@(values => ListBoxValuesChanged(values, context.DropDownBox))"
+                   TextFieldName="@nameof(Employee.FullName)"
+                   SelectionMode="ListBoxSelectionMode.Multiple"
+                   ShowCheckboxes="true"
+                   ShowSearchBox="true"
+                   CssClass="templateListbox">
+        </DxListBox>
+    </DropDownBodyTemplate>
+</DxDropDownBox>
+
+
+@code {
+    IEnumerable<Employee> ListBoxData { get; set; }
+    object Value { get; set; }
+    string QueryText(DropDownBoxQueryDisplayTextContext arg)
+    {
+        var names = (arg.Value as IEnumerable<Employee>)?.Select(x => x.FullName);
+        return names != null ? string.Join(",", names) : string.Empty;
+    }
+    IEnumerable<Employee> GetListBoxValues(IDropDownBox dropDownBox)
+    {
+        return dropDownBox.Value as IEnumerable<Employee>;
+    }
+    void ListBoxValuesChanged(IEnumerable<Employee> values, IDropDownBox dropDownBox)
+    {
+        dropDownBox.BeginUpdate();
+        dropDownBox.Value = values;
+        dropDownBox.EndUpdate();
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        ListBoxData = Employees;
+        Value = ListBoxData.Take(1);
+    }
+}
+
+@code {
+    // Sample employee data
+    private List<Employee> Employees { get; set; } = new()
+    {
+        new Employee { Id = 1, FullName = "Nancy Davolio", Position = "Sales Representative" },
+        new Employee { Id = 2, FullName = "Andrew Fuller", Position = "Vice President, Sales" },
+        new Employee { Id = 3, FullName = "Janet Leverling", Position = "Sales Representative" },
+        new Employee { Id = 4, FullName = "Margaret Peacock", Position = "Sales Representative" },
+        new Employee { Id = 5, FullName = "Steven Buchanan", Position = "Sales Manager" },
+        new Employee { Id = 6, FullName = "Michael Suyama", Position = "Sales Representative" },
+        new Employee { Id = 7, FullName = "Robert King", Position = "Sales Representative" }
+    };
+
+    // Selected employee IDs
+    private List<int> SelectedEmployeeIds { get; set; } = new();
+    
+    // Employee class definition
+    private class Employee
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public string Position { get; set; }
+    }
+}

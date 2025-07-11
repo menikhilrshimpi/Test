@@ -1,0 +1,96 @@
+// Button position and size
+double x = 20; 
+double y = 20; 
+double width = 150; 
+double height = 35; // Height for single line
+
+foreach (PdfPage page in coverSheetDoc.Pages)
+{
+    // Get the actual page height
+    double pageHeight = page.Height.Point;
+    double drawY = pageHeight - y - height;
+    
+    // Create annotation rectangle in PDF coordinates (bottom-left origin)
+    PdfRectangle pdfRectangle = new PdfRectangle(x, drawY, x + width, drawY + height);
+    
+    // Create link annotation with transparent appearance
+    var link = new PdfLinkAnnotation()
+    {
+        Color = XColors.Transparent,
+        Rectangle = pdfRectangle,
+        BorderStyle = new PdfBorderStyle { Width = 0 } // Remove border
+    };
+    link.Title = "Review & Pay Button";
+
+    // Create URI action
+    PdfDictionary uriAction = new PdfDictionary();
+    uriAction.Elements["/S"] = new PdfName("/URI");
+    uriAction.Elements["/URI"] = new PdfString(insuredInvitationToken);
+    link.Elements["/A"] = uriAction;
+
+    // Add annotation BEFORE drawing the button
+    page.Annotations.Add(link);
+    
+    using (var gfx = XGraphics.FromPdfPage(page))
+    {        
+        double borderThickness = 1.5;
+        
+        // Set base color to #0E0D6D
+        XColor baseColor = XColor.FromArgb(0x0E, 0x0D, 0x6D);
+        
+        // Calculate highlight and shadow colors based on base color
+        XColor highlightColor = XColor.FromArgb(
+            Math.Min(255, baseColor.R + 60),
+            Math.Min(255, baseColor.G + 60),
+            Math.Min(255, baseColor.B + 60)
+        );
+        
+        XColor shadowColor = XColor.FromArgb(
+            Math.Max(0, baseColor.R - 40),
+            Math.Max(0, baseColor.G - 40),
+            Math.Max(0, baseColor.B - 40)
+        );
+        
+        // Draw main button body with gradient for 3D effect
+        var gradient = new XLinearGradientBrush(
+            new XPoint(x, drawY),
+            new XPoint(x, drawY + height),
+            highlightColor,
+            shadowColor
+        );
+        gfx.DrawRectangle(gradient, new XRect(x, drawY, width, height));
+        
+        // Draw 3D beveled borders
+        // Top and left highlights
+        gfx.DrawLine(new XPen(highlightColor, borderThickness),
+            x, drawY,
+            x + width, drawY); // Top edge
+            
+        gfx.DrawLine(new XPen(highlightColor, borderThickness),
+            x, drawY,
+            x, drawY + height); // Left edge
+            
+        // Bottom and right shadows
+        gfx.DrawLine(new XPen(shadowColor, borderThickness),
+            x, drawY + height,
+            x + width, drawY + height); // Bottom edge
+            
+        gfx.DrawLine(new XPen(shadowColor, borderThickness),
+            x + width, drawY,
+            x + width, drawY + height); // Right edge
+
+        // Use Helvetica Bold font
+        var font = new XFont("Helvetica", 14, XFontStyleEx.Bold);
+        
+        // Text shadow (gives depth)
+        gfx.DrawString("Review & Pay Now", font, XBrushes.Black,
+            new XRect(x + 1, drawY + 1, width, height),
+            XStringFormats.Center);
+        
+        // Main text
+        gfx.DrawString("Review & Pay Now", font, XBrushes.White,
+            new XRect(x, drawY, width, height),
+            XStringFormats.Center);
+    }
+}
+

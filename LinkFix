@@ -1,0 +1,85 @@
+// Button configuration
+double width = 150; 
+double height = 35;
+double bottomMargin = 40; // 40px from bottom
+double borderThickness = 1.5;
+XColor baseColor = XColor.FromArgb(0x0E, 0x0D, 0x6D); // #0E0D6D
+
+foreach (PdfPage page in coverSheetDoc.Pages)
+{
+    // Get page dimensions
+    double pageWidth = page.Width.Point;
+    double pageHeight = page.Height.Point;
+    
+    // Calculate centered position with bottom margin
+    double x = (pageWidth - width) / 2; // Center horizontally
+    double drawY = pageHeight - height - bottomMargin; // Position from bottom
+    
+    // Create highlight and shadow colors
+    XColor highlightColor = XColor.FromArgb(
+        Math.Min(255, baseColor.R + 60),
+        Math.Min(255, baseColor.G + 60),
+        Math.Min(255, baseColor.B + 60)
+    );
+    
+    XColor shadowColor = XColor.FromArgb(
+        Math.Max(0, baseColor.R - 40),
+        Math.Max(0, baseColor.G - 40),
+        Math.Max(0, baseColor.B - 40)
+    );
+
+    // Create link annotation
+    var link = new PdfLinkAnnotation()
+    {
+        Color = XColors.Transparent,
+        Rectangle = new PdfRectangle(x, drawY, x + width, drawY + height),
+        Title = "Review & Pay Button"
+    };
+
+    // Configure border style through PDF dictionary
+    link.Elements.SetInteger("/Border", 0); // No border
+    link.Elements.SetArray("/BS", new PdfArray { new PdfInteger(0) }); // Border width 0
+
+    // Create URI action
+    PdfDictionary uriAction = new PdfDictionary();
+    uriAction.Elements["/S"] = new PdfName("/URI");
+    uriAction.Elements["/URI"] = new PdfString(insuredInvitationToken);
+    link.Elements["/A"] = uriAction;
+    
+    // Add annotation to page
+    page.Annotations.Add(link);
+    
+    using (var gfx = XGraphics.FromPdfPage(page))
+    {
+        // Draw main button with gradient
+        var gradient = new XLinearGradientBrush(
+            new XPoint(x, drawY),
+            new XPoint(x, drawY + height),
+            highlightColor,
+            shadowColor
+        );
+        gfx.DrawRectangle(gradient, new XRect(x, drawY, width, height));
+        
+        // Draw 3D borders
+        // Top and left highlights
+        gfx.DrawLine(new XPen(highlightColor, borderThickness), x, drawY, x + width, drawY);
+        gfx.DrawLine(new XPen(highlightColor, borderThickness), x, drawY, x, drawY + height);
+        
+        // Bottom and right shadows
+        gfx.DrawLine(new XPen(shadowColor, borderThickness), x, drawY + height, x + width, drawY + height);
+        gfx.DrawLine(new XPen(shadowColor, borderThickness), x + width, drawY, x + width, drawY + height);
+
+        // Draw text (Helvetica Bold)
+        var font = new XFont("Helvetica", 14, XFontStyleEx.Bold);
+        
+        // Text shadow for depth effect
+        gfx.DrawString("Review & Pay Now", font, XBrushes.Black,
+            new XRect(x + 1, drawY + 1, width, height),
+            XStringFormats.Center);
+        
+        // Main text
+        gfx.DrawString("Review & Pay Now", font, XBrushes.White,
+            new XRect(x, drawY, width, height),
+            XStringFormats.Center);
+    }
+}

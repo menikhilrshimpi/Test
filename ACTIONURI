@@ -13,9 +13,9 @@ foreach (PdfPage page in coverSheetDoc.Pages)
     
     // Calculate centered position with bottom margin
     double x = (pageWidth - width) / 2;
-    double y = pageHeight - height - bottomMargin; // Position from bottom
+    double y = pageHeight - height - bottomMargin;
     
-    // Create link annotation - use PDF coordinates directly
+    // Create link annotation
     var link = new PdfLinkAnnotation()
     {
         Color = XColors.Transparent,
@@ -23,11 +23,14 @@ foreach (PdfPage page in coverSheetDoc.Pages)
         Title = "Review & Pay Button"
     };
 
-    // Set border width to 0 using the correct PDF dictionary key
+    // Set border width to 0
     link.Elements.SetInteger("/Border", 0);
 
-    // Create URI action using PdfAction for better compatibility
-    link.Action = PdfAction.CreateUri(insuredInvitationToken);
+    // Create URI action - CORRECTED METHOD
+    PdfDictionary uriAction = new PdfDictionary();
+    uriAction.Elements["/S"] = new PdfName("/URI");
+    uriAction.Elements["/URI"] = new PdfString(insuredInvitationToken);
+    link.Elements["/A"] = uriAction;
     
     page.Annotations.Add(link);
     

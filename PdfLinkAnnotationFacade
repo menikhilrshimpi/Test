@@ -1,0 +1,68 @@
+using DevExpress.Pdf;
+using System.Drawing;
+
+public class PdfButtonGenerator
+{
+    public void AddHyperlinkButton(string inputPath, string outputPath, string targetUrl)
+    {
+        using (PdfDocumentProcessor processor = new PdfDocumentProcessor())
+        {
+            // Load existing PDF
+            processor.LoadDocument(inputPath);
+
+            // Process each page
+            foreach (PdfPage page in processor.Document.Pages)
+            {
+                // Create graphics for visual button
+                using (PdfGraphics graphics = processor.CreateGraphics())
+                {
+                    // Button dimensions and position
+                    double buttonWidth = 200;
+                    double buttonHeight = 40;
+                    double marginBottom = 50;
+                    double x = (page.CropBox.Width - buttonWidth) / 2;
+                    double y = marginBottom;
+
+                    // Draw button background (blue with rounded corners)
+                    graphics.FillRectangle(new PdfBrush(Color.FromArgb(0, 114, 187)),
+                        new RectangleF((float)x, (float)y, (float)buttonWidth, (float)buttonHeight),
+                        5);
+
+                    // Draw button text (white, centered)
+                    using (Font font = new Font("Arial", 14, FontStyle.Bold))
+                    {
+                        graphics.DrawString("Review & Pay Now", font,
+                            new PdfBrush(Color.White),
+                            new RectangleF((float)x, (float)y, (float)buttonWidth, (float)buttonHeight),
+                            new PdfStringFormat
+                            {
+                                Alignment = PdfStringAlignment.Center,
+                                LineAlignment = PdfStringAlignment.Center
+                            });
+                    }
+
+                    // Add graphics to page
+                    graphics.AddToPageForeground(page, 72, 72);
+                }
+
+                // Create link annotation using PdfLinkAnnotationFacade
+                var linkFacade = new PdfLinkAnnotationFacade(page)
+                {
+                    Rectangle = new PdfRectangle(
+                        (page.CropBox.Width - 200) / 2,  // x
+                        50,                             // y
+                        (page.CropBox.Width + 200) / 2,  // x + width
+                        90),                             // y + height
+                    BorderWidth = 0,
+                    HighlightMode = PdfAnnotationHighlightMode.None
+                };
+
+                // Set URI action
+                linkFacade.Action = new PdfUriAction(targetUrl);
+            }
+
+            // Save modified document
+            processor.SaveDocument(outputPath);
+        }
+    }
+}

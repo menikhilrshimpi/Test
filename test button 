@@ -1,0 +1,82 @@
+using System;
+using DevExpress.Pdf;
+using DevExpress.Pdf.Drawing;
+
+public class PdfButtonGenerator
+{
+    public void GeneratePdfWithButton(string outputPath, string targetUrl)
+    {
+        using (var processor = new PdfDocumentProcessor())
+        {
+            // Create empty document
+            processor.CreateEmptyDocument();
+            
+            // Add a new page (Letter size)
+            PdfPage page = processor.AddNewPage(PdfPaperSize.Letter);
+            var pageSize = page.Size;
+            
+            using (var g = processor.CreateGraphics())
+            {
+                // Button configuration
+                const string buttonText = "Review & Pay Now";
+                float bottomMargin = 100;  // Space from bottom of page
+                float verticalPadding = 15; // Vertical padding inside button
+                float horizontalPadding = 40; // Horizontal padding inside button
+                
+                // Create button font (Helvetica bold)
+                var buttonFont = new PdfFont(PdfFontFamily.Helvetica, 14, PdfFontStyle.Bold);
+                
+                // Measure text to determine button size
+                SizeF textSize = g.MeasureString(buttonText, buttonFont);
+
+                // Calculate button dimensions (with padding)
+                float buttonWidth = textSize.Width + horizontalPadding;
+                float buttonHeight = textSize.Height + verticalPadding;
+                
+                // Calculate button position (centered horizontally, fixed at bottom)
+                float buttonX = (pageSize.Width - buttonWidth) / 2;
+                float buttonY = pageSize.Height - bottomMargin - buttonHeight;
+
+                // Draw button background (blue)
+                g.FillRectangle(PdfBrushes.DodgerBlue, 
+                    new RectangleF(buttonX, buttonY, buttonWidth, buttonHeight));
+                
+                // Draw button border (dark blue)
+                g.DrawRectangle(new PdfPen(PdfBrushes.DarkBlue, 1), 
+                    new RectangleF(buttonX, buttonY, buttonWidth, buttonHeight));
+                
+                // Draw button text (centered, white)
+                float textX = buttonX + (buttonWidth - textSize.Width) / 2;
+                float textY = buttonY + (buttonHeight - textSize.Height) / 2;
+                g.DrawString(buttonText, buttonFont, PdfBrushes.White, textX, textY);
+
+                // Add hyperlink annotation (clickable area)
+                page.Annotations.Add(new PdfLinkAnnotation
+                {
+                    Rectangle = new PdfRectangle(buttonX, buttonY, buttonX + buttonWidth, buttonY + buttonHeight),
+                    Action = new PdfUriAction { Uri = targetUrl }
+                });
+
+                // Optional: Add QR note below button
+                var qrFont = new PdfFont(PdfFontFamily.Helvetica, 10);
+                float qrY = buttonY + buttonHeight + 10;
+                float qrTextWidth = g.MeasureString("Or use line QR Code", qrFont).Width;
+                g.DrawString("Or use line QR Code", qrFont, PdfBrushes.Black, 
+                    (pageSize.Width - qrTextWidth) / 2, qrY);
+
+                // Optional: Add footer at very bottom
+                var footerFont = new PdfFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
+                float footerY = pageSize.Height - 30;
+                float footerWidth = g.MeasureString("PayMyPremiums 🌤️", footerFont).Width;
+                g.DrawString("PayMyPremiums 🌤️", footerFont, PdfBrushes.Black, 
+                    (pageSize.Width - footerWidth) / 2, footerY);
+
+                // Render graphics to page
+                processor.RenderNewPageGraphics(page.PageNumber, g);
+            }
+
+            // Save PDF
+            processor.SaveDocument(outputPath);
+        }
+    }
+}

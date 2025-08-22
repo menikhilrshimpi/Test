@@ -1,0 +1,109 @@
+.payment-container {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.payment-header h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.payment-header p {
+    color: #6c757d;
+    margin: 0;
+}
+
+.payment-tabs {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+::deep .dxbl-tab-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+::deep .dxbl-tab-header-item {
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #495057;
+}
+
+::deep .dxbl-tab-header-item.dxbl-active {
+    background-color: white;
+    border-bottom: 3px solid #007bff;
+    color: #007bff;
+}
+
+::deep .dxbl-tab-content {
+    padding: 20px;
+}
+
+.tab-content {
+    position: relative;
+}
+
+.recommended-badge {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    background-color: #007bff;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.payment-details {
+    margin-bottom: 20px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+.description {
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.financing-info {
+    margin-top: 15px;
+}
+
+.summary-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.summary-link:hover {
+    text-decoration: underline;
+}
+
+.provider {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    margin-top: 15px;
+}

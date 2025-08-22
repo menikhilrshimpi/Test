@@ -1,0 +1,46 @@
+@using DevExpress.Blazor
+@using Microsoft.AspNetCore.Components
+
+<div class="payment-container">
+    <div class="payment-header">
+        <h3>Your Payment Options</h3>
+        <p>Most customers choose monthly financing to spread out their cost.</p>
+    </div>
+
+    <DxTabs @bind-SelectedTabIndex="@selectedTabIndex" CssClass="payment-tabs">
+        <DxTab Text="Easy Finance Plan">
+            <div class="tab-content">
+                <div class="recommended-badge">Recommended</div>
+                <div class="payment-details">
+                    <div class="price">$1,485.73/month</div>
+                    <div class="description">per payment for 9 monthly installments</div>
+                    <div class="financing-info">
+                        <a href="#" class="summary-link">View Full Financing Summary</a>
+                        <div class="provider">Financing provided by Direct</div>
+                    </div>
+                </div>
+                <DxButton Text="Continue with Easy Finance Plan" 
+                         RenderStyle="ButtonRenderStyle.Primary" 
+                         CssClass="continue-btn" />
+            </div>
+        </DxTab>
+        <DxTab Text="Pay in Full">
+            <div class="tab-content">
+                <div class="payment-details">
+                    <div class="price">$13,371.57</div>
+                    <div class="description">One-time payment</div>
+                </div>
+                <DxButton Text="Pay in Full" 
+                         RenderStyle="ButtonRenderStyle.Primary" 
+                         CssClass="continue-btn" />
+            </div>
+        </DxTab>
+    </DxTabs>
+</div>
+
+@code {
+    private int selectedTabIndex = 0;
+    
+    // You can add any additional logic here for handling tab changes
+    // or button clicks
+}

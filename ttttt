@@ -40,3 +40,25 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+
+
+
+
+
+
+
+
+.formTable > tbody > tr > td,
+.formTable > tbody > tr > th {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  vertical-align: middle !important;
+}
+
+/* Prevent double padding inside radio table */
+.formTable > tbody > tr > td:nth-child(2) > table td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}

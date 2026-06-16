@@ -62,3 +62,25 @@
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
+
+
+/* Equal row spacing across all tables */
+.formTable > tbody > tr > td,
+.formTable > tbody > tr > th {
+  padding: 10px 8px !important;
+  vertical-align: middle !important;
+}
+
+/* Column 3 button vertical alignment */
+.formTable > tbody > tr > td:nth-child(3),
+.formTable > tbody > tr > th:nth-child(3) {
+  vertical-align: middle !important;
+  padding-left: 10px !important;
+}
+
+/* Validate buttons inside column 3 */
+.formTable > tbody > tr > td:nth-child(3) input[type="submit"],
+.formTable > tbody > tr > td:nth-child(3) input[type="button"] {
+  vertical-align: middle !important;
+  margin: 0 !important;
+}

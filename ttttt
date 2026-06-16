@@ -1,0 +1,42 @@
+/* Fix radio button + label alignment */
+.formTable > tbody > tr > td:nth-child(2) > table td {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  padding: 0 8px 0 0 !important;
+}
+
+.formTable > tbody > tr > td:nth-child(2) > table input[type="radio"] {
+  width: auto !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: static !important; /* remove your top:-1px */
+  flex-shrink: 0;
+}
+
+.formTable > tbody > tr > td:nth-child(2) > table label {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  cursor: pointer;
+  line-height: 1 !important;
+}
+
+/* Reset the nested table itself */
+.formTable > tbody > tr > td:nth-child(2) > table {
+  width: auto !important;
+  table-layout: auto !important;
+  border-collapse: collapse;
+}
+
+.formTable > tbody > tr > td:nth-child(2) > table tr,
+.formTable > tbody > tr > td:nth-child(2) > table tbody {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-wrap: wrap;
+  gap: 8px;
+}

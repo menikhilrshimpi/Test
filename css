@@ -1,0 +1,79 @@
+/* ===== OUTER FORM TABLE ===== */
+.formTable {
+  table-layout: fixed !important;
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+}
+
+/* Label column */
+.formTable > tbody > tr > td:nth-child(1),
+.formTable > tbody > tr > th:nth-child(1) {
+  width: 25%;
+  vertical-align: middle;
+  font-weight: 600;
+}
+
+/* Input column */
+.formTable > tbody > tr > td:nth-child(2),
+.formTable > tbody > tr > th:nth-child(2) {
+  width: 50%;
+  vertical-align: middle;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Button/action column */
+.formTable > tbody > tr > td:nth-child(3),
+.formTable > tbody > tr > th:nth-child(3) {
+  width: 25%;
+  padding-left: 10px;
+  vertical-align: middle;
+}
+
+/* Direct inputs/selects only — excludes nested RadioButtonList */
+.formTable > tbody > tr > td:nth-child(2) > input,
+.formTable > tbody > tr > td:nth-child(2) > select,
+.formTable > tbody > tr > td:nth-child(2) > textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block;
+}
+
+/* ===== NESTED RADIOBUTTONLIST TABLE ===== */
+
+/* Reset nested table */
+.formTable > tbody > tr > td:nth-child(2) > table {
+  width: auto !important;
+  table-layout: auto !important;
+  border-collapse: collapse;
+}
+
+/* Each radio option cell */
+.formTable > tbody > tr > td:nth-child(2) > table td {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px;
+  padding: 2px 8px 2px 0;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Radio button */
+.formTable > tbody > tr > td:nth-child(2) > table input[type="radio"] {
+  width: auto !important;
+  display: inline !important;
+  margin: 0 !important;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Label text */
+.formTable > tbody > tr > td:nth-child(2) > table label {
+  display: inline !important;
+  margin: 0 !important;
+  vertical-align: middle;
+  cursor: pointer;
+  line-height: 1;
+}
